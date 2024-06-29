@@ -23,6 +23,11 @@ class Album(models.Model):
     def get_absolute_url(self):
         return reverse("album-detail", kwargs={"pk": self.pk})
 
+    def display_genre(self):
+        return ", ".join(genre.name for genre in self.genre.all()[:3])
+
+    display_genre.short_description = "Genre"
+
     class Meta:
         ordering = ["title"]
 
