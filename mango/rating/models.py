@@ -18,7 +18,7 @@ class Album(models.Model):
     album_cover = models.ImageField()
 
     def __str__(self):
-        return self.title - self.artist
+        return self.title
 
     def get_absolute_url(self):
         return reverse("album-detail", kwargs={"pk": self.pk})
@@ -38,7 +38,7 @@ class Song(models.Model):
     album = models.ForeignKey("Album", on_delete=models.RESTRICT)
 
     def __str__(self) -> str:
-        return self.title - self.duration
+        return self.title
 
     def get_absolute_url(self):
         return reverse("song-detail", kwargs={"pk": self.pk})
@@ -56,14 +56,14 @@ class Artist(models.Model):
 
 
 class Genre(models.Model):
-    title = models.CharField(
+    name = models.CharField(
         max_length=200,
         unique=True,
         help_text="Enter a song genre (eg. Electronic, Indie, Pop)",
     )
 
     def __str__(self) -> str:
-        return self.title
+        return self.name
 
     def get_absolute_url(self):
         return reverse("genre-detail", kwargs={"pk": self.pk})
@@ -71,9 +71,9 @@ class Genre(models.Model):
     class Meta:
         constraints = [
             UniqueConstraint(
-                Lower("title"),
+                Lower("name"),
                 name="genre_name_case_insensitive_unique",
                 violation_error_message="Genre already exists (case insensitive match)",
             )
         ]
-        ordering = ["title"]
+        ordering = ["name"]
