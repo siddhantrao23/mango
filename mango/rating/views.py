@@ -24,3 +24,15 @@ class AlbumListView(ListView):
 
 class AlbumDetailView(DetailView):
     model = Album
+
+
+class ArtistListView(ListView):
+    model = Artist
+
+
+class ArtistDetailView(DetailView):
+    model = Artist
+
+
+class SongDetailView(DetailView):
+    model = Song
