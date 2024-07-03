@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Album List</h1>
+{% if album_list %}
+<ul>
+    {% for album in album_list %}
+    <li>    
+        <img src="{{ album.album_cover.url }} " width=200>
+        <a href="{{ album.get_absolute_url }}">{{ album.title }}</a>
+    </li>
+    {% endfor %}
+</ul>
+{% else %}
+<p>There are currently no albums in the catalog.</p>
+{% endif %}
+{% endblock content %}

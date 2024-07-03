@@ -15,7 +15,7 @@ class Album(models.Model):
     )
     release_date = models.DateField()
     rating = models.SmallIntegerField(blank=True, null=True)
-    album_cover = models.ImageField()
+    album_cover = models.ImageField(upload_to="images/")
 
     def __str__(self):
         return self.title
