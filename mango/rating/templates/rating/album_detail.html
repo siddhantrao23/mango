@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+<img src="{{ album.album_cover.url }} " width=200>
+<h1>{{ album.title }} by {{ album.artist }}</h1>
+<p>{{ album.release_date }} - {{ album.genre.all|join:", " }}<p>
+
+{% if album.rating %}
+<p>Audience rated this album a {{ album.rating }} / 10</p>
+{% endif %}
+
+<h2>Songs:</h1>
+<ol>
+{% for song in album.song_set.all %}
+    <li>{{ song.title }} - {{ song.duration }}</li>
+{% endfor %}
+</ol>
+{% endblock content %}
