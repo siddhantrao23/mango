@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Mango Home</h1>
+    <p>Welcome to the album ranking website, Mango</p>
+    <h1>Current Directory</h1>
+    <ul>
+        <li><strong>Albums:</strong> {{ num_albums }}</li>
+        <li><strong>Artists:</strong> {{ num_artists }}</li>
+        <li><strong>Songs:</strong> {{ num_songs }}</li>
+    </ul>
+{% endblock content %}
