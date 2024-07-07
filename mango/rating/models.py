@@ -2,6 +2,7 @@ from django.db import models
 from django.urls import reverse
 from django.db.models.functions import Lower
 from django.db.models import UniqueConstraint
+from django.conf import settings
 
 
 # Create your models here.
@@ -77,3 +78,9 @@ class Genre(models.Model):
             )
         ]
         ordering = ["name"]
+
+
+class UserSongRating(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.RESTRICT)
+    song = models.ForeignKey("Song", on_delete=models.RESTRICT)
+    liked = models.BooleanField(blank=True, null=True)
