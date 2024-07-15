@@ -41,6 +41,6 @@ class SongDetailView(DetailView):
     model = Song
 
 
-class AlbumRatingView(DetailView, LoginRequiredMixin):
+class AlbumRatingView(LoginRequiredMixin, DetailView):
     model = Album
     template_name = "rating/user_album_rating.html"
