@@ -1,5 +1,8 @@
+from typing import Any
+from django.db.models.query import QuerySet
 from django.shortcuts import render
 from django.views.generic import ListView, DetailView
+from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Album, Artist, Song
 
 
@@ -36,3 +39,8 @@ class ArtistDetailView(DetailView):
 
 class SongDetailView(DetailView):
     model = Song
+
+
+class AlbumRatingView(DetailView, LoginRequiredMixin):
+    model = Album
+    template_name = "rating/user_album_rating.html"

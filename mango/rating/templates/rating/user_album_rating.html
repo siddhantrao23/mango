@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block content %}
+<img src="{{ album.album_cover.url }} " width=200>
+<h1>{{ album.title }} by <a href=" {% url 'artist-detail' album.artist.id %}">{{ album.artist }}</a></h1>
+<p>{{ album.release_date }} - {{ album.genre.all|join:", " }}<p>
+
+{% if album.rating %}
+<p>Audience rated this album a {{ album.rating }} / 10</p>
+{% endif %}
+
+<div class="swipe__container">
+    <div class="swipe__cards">
+        {% for song in album.song_set.all %}
+        <div class="swipe__card">
+            <div class="top">
+                <img src="{{ album.album_cover.url }} " width=100>
+            </div>
+            <div class="btm">
+                <h3>{{ song.title }}</h3>
+            </div>
+            <div class="swipe__choice m__reject"></div>
+            <div class="swipe__choice m__like"></div>
+            <div class="swipe__drag"></div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+<script src="{% static 'js/script.js' %}" type="text/javascript"></script>
+{% endblock content %}
