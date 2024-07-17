@@ -16,6 +16,7 @@ class Album(models.Model):
     )
     release_date = models.DateField()
     rating = models.SmallIntegerField(blank=True, null=True)
+    num_ratings = models.IntegerField(default=0)
     album_cover = models.ImageField(upload_to="images/")
 
     def __str__(self):
@@ -80,7 +81,12 @@ class Genre(models.Model):
         ordering = ["name"]
 
 
-class UserSongRating(models.Model):
+class UserAlbumRating(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.RESTRICT)
-    song = models.ForeignKey("Song", on_delete=models.RESTRICT)
-    liked = models.BooleanField(blank=True, null=True)
+    album = models.ForeignKey("Album", on_delete=models.RESTRICT)
+    rating = models.SmallIntegerField(blank=True, null=True)
+
+    class Meta:
+        constraints = [
+            UniqueConstraint(fields=["user", "album"], name="unique_composite_key")
+        ]

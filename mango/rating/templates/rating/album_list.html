@@ -6,8 +6,10 @@
 <ul>
     {% for album in album_list %}
     <li>    
-        <img src="{{ album.album_cover.url }} " width=200>
-        <a href="{{ album.get_absolute_url }}">{{ album.title }} by {{ album.artist }}</a>
+        <a href="{{ album.get_absolute_url }}">
+            <img src="{{ album.album_cover.url }} " width=200>
+            {{ album.title }} by {{ album.artist }}
+        </a>
     </li>
     {% endfor %}
 </ul>

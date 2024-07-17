@@ -7,6 +7,7 @@ from .views import (
     ArtistListView,
     SongDetailView,
     index,
+    submit_ratings,
 )
 
 urlpatterns = [
@@ -17,4 +18,5 @@ urlpatterns = [
     path("artists/", ArtistListView.as_view(), name="artists"),
     path("artists/<int:pk>", ArtistDetailView.as_view(), name="artist-detail"),
     path("songs/<int:pk>", SongDetailView.as_view(), name="songs-detail"),
+    path("submit-ratings/", submit_ratings, name="submit-ratings"),
 ]

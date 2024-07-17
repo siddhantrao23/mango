@@ -1,115 +1,90 @@
+$(document).ready(function() {
+
   var animating = false;
   var cardsCounter = 0;
-  var numOfCards = document.querySelectorAll('.swipe__card').length / 2;
+  var numOfCards = document.querySelectorAll('.swipe__card').length;
   var decisionVal = 80;
   var pullDeltaX = 0;
   var deg = 0;
-  var card, cardReject, cardLike;
+  var $card, $cardReject, $cardLike;
 
   function pullChange() {
     animating = true;
     deg = pullDeltaX / 10;
-    card.style.transform = `translateX(${pullDeltaX}px) rotate(${deg}deg)`;
+    $card.css("transform", "translateX("+ pullDeltaX +"px) rotate("+ deg +"deg)");
 
     var opacity = pullDeltaX / 100;
     var rejectOpacity = (opacity >= 0) ? 0 : Math.abs(opacity);
     var likeOpacity = (opacity <= 0) ? 0 : opacity;
-    cardReject.style.opacity = rejectOpacity;
-    cardLike.style.opacity = likeOpacity;
+    $cardReject.css("opacity", rejectOpacity);
+    $cardLike.css("opacity", likeOpacity);
   };
 
   function release() {
-
+  
     if (pullDeltaX >= decisionVal) {
-      card.classList.add("to-right");
+      $card.addClass("to-right liked");
+      var curr = $(".user__rating").text();
+      $(".user__rating").text(Number(curr) + 1);
     } else if (pullDeltaX <= -decisionVal) {
-      card.classList.add("to-left");
+      $card.addClass("to-left disliked");
     }
 
     if (Math.abs(pullDeltaX) >= decisionVal) {
-      card.classList.add("inactive");
+      $card.addClass("inactive");
 
       setTimeout(function() {
-        card.classList.add("below");
-        card.classList.remove("inactive", "to-left", "to-right");
+        $card.addClass("below").removeClass("inactive to-left to-right");
         cardsCounter++;
         if (cardsCounter === numOfCards) {
-          cardsCounter = 0;
-          document.querySelectorAll(".swipe__card").forEach(function(card) {
-            card.classList.remove("below");
-          });
+          showSubmitButton();
         }
       }, 300);
     }
 
     if (Math.abs(pullDeltaX) < decisionVal) {
-      card.classList.add("reset");
+      $card.addClass("reset");
+    }
+
+    function showSubmitButton() {
+      $(document).off("mousedown touchstart");
+      $("#rating-form").show();
     }
 
     setTimeout(function() {
-      card.style.transform = "";
-      card.classList.remove("reset");
-      document.querySelectorAll(".swipe__choice", card).forEach(function(choice) {
-        choice.style.opacity = "";
-      });
+      $card.attr("style", "").removeClass("reset")
+        .find(".swipe__choice").attr("style", "");
 
       pullDeltaX = 0;
       animating = false;
     }, 300);
   };
 
-  document.addEventListener("mousedown", function(e) {
-    if (e.target.closest('.swipe__card:not(.inactive)')) {
-      if (animating) return;
+  $(document).on("mousedown touchstart", ".swipe__card:not(.inactive)", function(e) {
+    if (animating) return;
 
-      card = e.target.closest('.swipe__card');
-      cardReject = card.querySelector(".swipe__choice.m--reject");
-      cardLike = card.querySelector(".swipe__choice.m--like");
-      var startX = e.pageX;
+    $card = $(this);
+    $cardReject = $(".swipe__choice.m__reject", $card);
+    $cardLike = $(".swipe__choice.m__like", $card);
+    var startX =  e.pageX || e.originalEvent.touches[0].pageX;
 
-      function moveHandler(e) {
-        var x = e.pageX;
-        pullDeltaX = (x - startX);
-        if (!pullDeltaX) return;
-        pullChange();
-      }
+    $(document).on("mousemove touchmove", function(e) {
+      var x = e.pageX || e.originalEvent.touches[0].pageX;
+      pullDeltaX = (x - startX);
+      if (!pullDeltaX) return;
+      pullChange();
+    });
 
-      function upHandler() {
-        document.removeEventListener("mousemove", moveHandler);
-        document.removeEventListener("mouseup", upHandler);
-        if (!pullDeltaX) return; // prevents from rapid click events
-        release();
-      }
-
-      document.addEventListener("mousemove", moveHandler);
-      document.addEventListener("mouseup", upHandler);
-    }
+    $(document).on("mouseup touchend", function() {
+      $(document).off("mousemove touchmove mouseup touchend");
+      if (!pullDeltaX) return; // prevents from rapid click events
+      release();
+    });
   });
 
-  document.addEventListener("touchstart", function(e) {
-    if (e.target.closest('.swipe__card:not(.inactive)')) {
-      if (animating) return;
-
-      card = e.target.closest('.swipe__card');
-      cardReject = card.querySelector(".swipe__choice.m--reject");
-      cardLike = card.querySelector(".swipe__choice.m--like");
-      var startX = e.touches[0].pageX;
-
-      function moveHandler(e) {
-        var x = e.touches[0].pageX;
-        pullDeltaX = (x - startX);
-        if (!pullDeltaX) return;
-        pullChange();
-      }
-
-      function upHandler() {
-        document.removeEventListener("touchmove", moveHandler);
-        document.removeEventListener("touchend", upHandler);
-        if (!pullDeltaX) return; // prevents from rapid click events
-        release();
-      }
-
-      document.addEventListener("touchmove", moveHandler);
-      document.addEventListener("touchend", upHandler);
-    }
+  $("#submit-rating-button").on("click", function() {
+    var curr = $(".user__rating").text();
+    $("#rating-input").val(curr);
   });
+
+});
