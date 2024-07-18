@@ -15,7 +15,7 @@ class Album(models.Model):
         "Genre", blank=True, help_text="Select a genre for this album"
     )
     release_date = models.DateField()
-    rating = models.SmallIntegerField(blank=True, null=True)
+    rating = models.DecimalField(max_digits=4, decimal_places=2, blank=True, null=True)
     num_ratings = models.IntegerField(default=0)
     album_cover = models.ImageField(upload_to="images/")
 
@@ -84,7 +84,7 @@ class Genre(models.Model):
 class UserAlbumRating(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.RESTRICT)
     album = models.ForeignKey("Album", on_delete=models.RESTRICT)
-    rating = models.SmallIntegerField(blank=True, null=True)
+    rating = models.DecimalField(max_digits=4, decimal_places=2, blank=True, null=True)
 
     class Meta:
         constraints = [
