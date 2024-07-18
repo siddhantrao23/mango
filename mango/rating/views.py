@@ -26,21 +26,17 @@ def submit_ratings(request):
     if request.method == "POST":
         form = request.POST.dict()
         album = get_object_or_404(Album, pk=form["album"])
-        rating = int(form["rating"])
+        user_rating = int(form["rating"]) * 10 / album.song_set.count()
         user_album_rating = UserAlbumRating.objects.create(
-            user_id=form["user"], album_id=form["album"], rating=rating
+            user_id=form["user"], album_id=form["album"], rating=user_rating
         )
+        album.num_ratings += 1
 
-        # update running average score of album
         if not album.rating:
             album.rating = 0
-
-        n = album.num_ratings + 1
-        currRating = album.num_ratings
-        print(form, n, currRating)
-        newRating = currRating + (rating - currRating) / n
-        album.num_ratings = n
-        album.rating = newRating
+        currRating = float(album.rating)
+        newRating = currRating + (user_rating - currRating) / album.num_ratings
+        album.rating = round(newRating, 2)
         album.save()
         user_album_rating.save()
         return HttpResponseRedirect(
