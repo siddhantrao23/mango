@@ -1,10 +1,10 @@
 from django.contrib import admin
-from .models import Album, Song, Artist, Genre, UserAlbumRating
+from .models import Album, Song, Artist, Genre, Ratings
 
 # Register your models here.
 admin.site.register(Song)
 admin.site.register(Genre)
-admin.site.register(UserAlbumRating)
+admin.site.register(Ratings)
 
 
 class SongInline(admin.TabularInline):

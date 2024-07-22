@@ -81,7 +81,7 @@ class Genre(models.Model):
         ordering = ["name"]
 
 
-class UserAlbumRating(models.Model):
+class Ratings(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.RESTRICT)
     album = models.ForeignKey("Album", on_delete=models.RESTRICT)
     rating = models.DecimalField(max_digits=4, decimal_places=2, blank=True, null=True)
