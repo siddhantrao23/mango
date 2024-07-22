@@ -1,25 +1,13 @@
 from typing import Any
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.views.generic import ListView, DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
-from .models import Album, Artist, Song, UserAlbumRating
+from .models import Album, Artist, Song, Ratings
 
 
 # Create your views here.
-def index(request):
-    num_albums = Album.objects.all().count()
-    num_artists = Artist.objects.all().count()
-    num_songs = Song.objects.all().count()
-
-    context = {
-        "num_albums": num_albums,
-        "num_artists": num_artists,
-        "num_songs": num_songs,
-    }
-
-    return render(request, "index.html", context)
 
 
 def submit_ratings(request):
@@ -27,7 +15,7 @@ def submit_ratings(request):
         form = request.POST.dict()
         album = get_object_or_404(Album, pk=form["album"])
         user_rating = int(form["rating"]) * 10 / album.song_set.count()
-        user_album_rating = UserAlbumRating.objects.create(
+        user_album_rating = Ratings.objects.create(
             user_id=form["user"], album_id=form["album"], rating=user_rating
         )
         album.num_ratings += 1
@@ -64,6 +52,15 @@ class SongDetailView(DetailView):
     model = Song
 
 
-class AlbumRatingView(LoginRequiredMixin, DetailView):
+class SubmitRatingView(LoginRequiredMixin, DetailView):
     model = Album
-    template_name = "rating/user_album_rating.html"
+    template_name = "rating/submit_rating.html"
+
+
+class UserRatingsView(LoginRequiredMixin, ListView):
+    model = Ratings
+    template_name = "rating/user_ratings.html"
+
+    def get_queryset(self):
+        print(Ratings.objects.filter(user=self.request.user))
+        return Ratings.objects.filter(user=self.request.user)

@@ -1,7 +1,8 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1>Album List</h1>
+<h1>Welcome to Mango!</h1>
+<p>Here are the list of albums available to rate:</p>
 {% if album_list %}
 <ul>
     {% for album in album_list %}
@@ -10,6 +11,9 @@
             <img src="{{ album.album_cover.url }} " width=200>
             {{ album.title }} by {{ album.artist }}
         </a>
+        {% if album.rating %}
+        {{ album.rating }}
+        {% endif %}
     </li>
     {% endfor %}
 </ul>
